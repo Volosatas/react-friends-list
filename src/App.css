@@ -1,1 +1,9 @@
+.card {
+  display: flex;
+  background-color: grey;
+}
 
+.card__item {
+  border: 1px solid pink;
+  padding: 10px;
+}
