@@ -1,0 +1,26 @@
+.card {
+  margin: 0 auto 10px auto;
+  display: flex;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  gap: 5px;
+  max-width: 80%;
+  box-shadow: 2px 2px 2px 2px #d0d0d0;
+}
+
+.card__item {
+  padding: 10px;
+  flex: 1;
+}
+
+.card__button {
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: rgb(230, 38, 38);
+}
+
+.card__button:hover {
+  background-color: rgb(136, 12, 12);
+  cursor: pointer;
+}

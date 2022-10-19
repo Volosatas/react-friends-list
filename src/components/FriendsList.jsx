@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./friendsList.css";
+import "./friendsList-styles.css";
 
 const friends = [
   { firstName: "John", lastName: "Smith", age: 32, city: "Kaunas" },
@@ -19,11 +19,11 @@ export class FriendsList extends Component {
       return (
         <div key={friend.firstName + friend.lastName} className="card">
           <div className="card__item">
-            Name: {friend.firstName} {friend.lastName}
+            {friend.firstName} {friend.lastName}
           </div>
           <div className="card__item">Age: {friend.age}</div>
-          <div className="card__item">City: {friend.city}</div>
-          <button>Delete friend</button>
+          <div className="card__item">{friend.city}</div>
+          <button className="card__button">Delete friend</button>
         </div>
       );
     });
