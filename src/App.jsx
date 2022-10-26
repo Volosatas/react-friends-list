@@ -8,14 +8,70 @@ class App extends Component {
     super(props);
     this.state = {
       friends: [
-        { firstName: "John", lastName: "Smith", age: 32, city: "Kaunas" },
-        { firstName: "Maria", lastName: "Hudghes", age: 28, city: "Siauliai" },
-        { firstName: "Thomas", lastName: "Muiller", age: 33, city: "Vilnius" },
+        {
+          id: 0,
+          firstName: "John",
+          lastName: "Smith",
+          age: 32,
+          city: "Kaunas",
+        },
+        {
+          id: 1,
+          firstName: "Maria",
+          lastName: "Hudghes",
+          age: 28,
+          city: "Siauliai",
+        },
+        {
+          id: 2,
+          firstName: "Thomas",
+          lastName: "Muiller",
+          age: 33,
+          city: "Vilnius",
+        },
       ],
+      formState: { firstName: "", lastName: "", age: "", city: "" },
     };
-    this.newFriend = [{ firstName: "", lastName: "", age: "", city: "" }];
+    this.handleFormStateChange = this.handleFormStateChange.bind(this);
     this.handleAddFriend = this.handleAddFriend.bind(this);
+    this.handleFriendsListDelete = this.handleFriendDelete.bind(this);
   }
+
+  handleFormStateChange = (e) => {
+    const inputId = e.target.id;
+    const inputValue = e.target.value;
+
+    this.setState({
+      ...this.state,
+      formState: { ...this.state.formState, [inputId]: inputValue },
+    });
+  };
+
+  handleAddFriend = (e) => {
+    e.preventDefault();
+
+    const { firstName, lastName, age, city } = this.state.formState;
+
+    const friendToAdd = {
+      id: String(this.state.friends.length),
+      firstName,
+      lastName,
+      age,
+      city,
+    };
+    this.setState({
+      ...this.state,
+      friends: [...this.state.friends, friendToAdd],
+      formState: { firstName: "", lastName: "", age: "", city: "" },
+    });
+  };
+
+  handleFriendDelete = (cardId) => {
+    const filteredFriends = this.state.friends.filter(
+      (friend) => friend.id !== cardId
+    );
+    this.setState({ ...this.state, friends: filteredFriends });
+  };
 
   form = () => {
     return (
@@ -23,12 +79,13 @@ class App extends Component {
         <div className="form__container">
           <form className="form">
             <div className="form__field">
-              <label className="form__field--label" htmlFor="name">
+              <label className="form__field--label" htmlFor="firstName">
                 Name:
               </label>
               <input
-                value={this.newFriend.firstName}
-                onChange={this.handleFirstName}
+                id="firstName"
+                value={this.state.formState.firstName}
+                onChange={this.handleFormStateChange}
                 className="form__field--input"
                 type="text"
                 placeholder="Peter"
@@ -36,12 +93,13 @@ class App extends Component {
               />
             </div>
             <div className="form__field">
-              <label className="form__field--label" htmlFor="surname">
+              <label className="form__field--label" htmlFor="lastName">
                 Surname:
               </label>
               <input
-                value={this.newFriend.lastName}
-                onChange={this.handleLastName}
+                id="lastName"
+                value={this.state.formState.lastName}
+                onChange={this.handleFormStateChange}
                 className="form__field--input"
                 type="text"
                 placeholder="Griffin"
@@ -53,22 +111,23 @@ class App extends Component {
                 Age:
               </label>
               <input
-                value={this.newFriend.age}
-                onChange={this.handleAge}
+                id="age"
+                value={this.state.formState.age}
+                onChange={this.handleFormStateChange}
                 className="form__field--input"
                 type="number"
                 placeholder="43"
                 required
-                min={10}
               />
             </div>
             <div className="form__field">
-              <label className="form__field--label" htmlFor="from">
+              <label className="form__field--label" htmlFor="city">
                 City:
               </label>
               <input
-                value={this.city}
-                onChange={this.handleCity}
+                id="city"
+                value={this.state.formState.city}
+                onChange={this.handleFormStateChange}
                 className="form__field--input"
                 type="text"
                 placeholder="Quahog"
@@ -93,57 +152,38 @@ class App extends Component {
     );
   };
 
-  handleFirstName = (e) => {
-    return this.setState((this.newFriend.firstName = e.target.value));
-  };
-  handleLastName = (e) => {
-    this.setState((this.newFriend.lastName = e.target.value));
-  };
-  handleAge = (e) => {
-    this.setState((this.newFriend.age = e.target.value));
-  };
-  handleCity = (e) => {
-    this.setState((this.newFriend.city = e.target.value));
-  };
-
-  handleAddFriend = () => {
-    const friendToAdd = {
-      firstName: this.newFriend.firstName,
-      lastName: this.newFriend.lastName,
-      age: this.newFriend.age,
-      city: this.newFriend.city,
-    };
-    this.setState((prevState) => ({
-      friends: [...prevState.friends, friendToAdd],
-    }));
-
-    console.log(this.state);
-  };
-
   friendsList = () => {
     const allFriends = this.state.friends.map((friend) => {
       return (
-        <div key={friend.firstName + friend.lastName} className="card">
+        <div key={friend.id} className="card">
           <div className="card__item">
             {friend.firstName} {friend.lastName}
           </div>
           <div className="card__item">Age: {friend.age}</div>
           <div className="card__item">{friend.city}</div>
-          <button className="card__button">Delete friend</button>
+          <button
+            onClick={() => this.handleFriendDelete(friend.id)}
+            className="card__button"
+            type="submit"
+          >
+            Delete friend
+          </button>
         </div>
       );
     });
     return allFriends;
   };
 
-  handleFriendsListDelete = () => {};
-
   render() {
     return (
       <div className="app">
         <h3 className="header">Welcome to your Friend List APP</h3>
         {this.form()}
-        {this.friendsList()}
+        {this.state.friends.length ? (
+          this.friendsList()
+        ) : (
+          <h1>Go and make some friends, NOOB</h1>
+        )}
       </div>
     );
   }
